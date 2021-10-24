@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "backend/notifierDefine";
+
+package notifierDefine;
+
+service NotifierService {
+  rpc Notifier (NotifierRequest) returns (NotifierResponse) {}
+}
+
+message NotifierRequest {
+  uint32 roomNumber = 1;
+  uint32 flag = 2;
+}
+
+message NotifierResponse {
+  string message = 1;
+}
