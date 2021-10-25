@@ -1,9 +1,11 @@
 package main
 
 import (
+	"background/notifier/middlewares"
 	"background/notifier/services"
 	"background/proto/notifierDefine"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"go.uber.org/zap"
@@ -44,7 +46,8 @@ func main() {
 	var opts []grpc.ServerOption
 	opts = append(opts, grpc_middleware.WithUnaryServerChain(
 		grpc_ctxtags.UnaryServerInterceptor(),
-		grpc_zap.UnaryServerInterceptor(production, zapOpt)))
+		grpc_zap.UnaryServerInterceptor(production, zapOpt),
+		grpc_auth.UnaryServerInterceptor(middlewares.Authenticate)))
 
 	server := grpc.NewServer(opts...)
 
