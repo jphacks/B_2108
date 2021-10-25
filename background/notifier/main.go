@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
 )
@@ -51,6 +52,7 @@ func main() {
 	log.Println("Waiting for request ....")
 	log.Println("------------------------")
 
+	reflection.Register(server)
 	if e := server.Serve(listen); e != nil {
 		log.Fatalln(e)
 	}
