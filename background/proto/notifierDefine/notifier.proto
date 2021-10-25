@@ -9,8 +9,7 @@ service NotifierService {
 }
 
 message NotifierRequest {
-  uint32 roomNumber = 1;
-  uint32 flag = 2;
+  uint32 room = 1;
 }
 
 message NotifierResponse {

@@ -3,7 +3,6 @@ package services
 import (
 	"background/proto/notifierDefine"
 	"context"
-	"encoding/json"
 	"fmt"
 	"google.golang.org/grpc/codes"
 )
@@ -13,19 +12,11 @@ type NotifierService struct {
 }
 
 func (*NotifierService) Notifier(ctx context.Context, request *notifierDefine.NotifierRequest) (*notifierDefine.NotifierResponse, error) {
-	roomNumber := request.GetRoomNumber()
-	flag := request.GetFlag()
+	room := request.GetRoom()
 
-	result := map[codes.Code]string{
-		codes.OK: fmt.Sprintf("%d, %d", roomNumber, flag),
-	}
-
-	bytes, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
+	result := fmt.Sprintf("%v, %d", codes.OK, room)
 
 	return &notifierDefine.NotifierResponse{
-		Message: string(bytes),
+		Message: result,
 	}, nil
 }
