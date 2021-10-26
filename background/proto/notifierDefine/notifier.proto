@@ -5,13 +5,34 @@ option go_package = "backend/notifierDefine";
 package notifierDefine;
 
 service NotifierService {
+  rpc RegisterPost (RegisterRequest) returns (RegisterResponse) {}
   rpc Notifier (NotifierRequest) returns (NotifierResponse) {}
+  rpc Push (PushRequest) returns (stream PushReply) {}
+}
+
+message RegisterRequest {
+  uint32 room = 1;
+  string apartmentName = 2;
+}
+
+message RegisterResponse {
+  string message = 1;
 }
 
 message NotifierRequest {
   uint32 room = 1;
+  string apartmentName = 2;
 }
 
 message NotifierResponse {
   string message = 1;
+}
+
+message PushRequest {
+  uint32 room = 1;
+  string apartmentName = 2;
+}
+
+message PushReply {
+  bool flag = 1;
 }

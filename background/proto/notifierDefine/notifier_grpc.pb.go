@@ -18,7 +18,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotifierServiceClient interface {
+	RegisterPost(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Notifier(ctx context.Context, in *NotifierRequest, opts ...grpc.CallOption) (*NotifierResponse, error)
+	Push(ctx context.Context, in *PushRequest, opts ...grpc.CallOption) (NotifierService_PushClient, error)
 }
 
 type notifierServiceClient struct {
@@ -27,6 +29,15 @@ type notifierServiceClient struct {
 
 func NewNotifierServiceClient(cc grpc.ClientConnInterface) NotifierServiceClient {
 	return &notifierServiceClient{cc}
+}
+
+func (c *notifierServiceClient) RegisterPost(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, "/notifierDefine.NotifierService/RegisterPost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *notifierServiceClient) Notifier(ctx context.Context, in *NotifierRequest, opts ...grpc.CallOption) (*NotifierResponse, error) {
@@ -38,11 +49,45 @@ func (c *notifierServiceClient) Notifier(ctx context.Context, in *NotifierReques
 	return out, nil
 }
 
+func (c *notifierServiceClient) Push(ctx context.Context, in *PushRequest, opts ...grpc.CallOption) (NotifierService_PushClient, error) {
+	stream, err := c.cc.NewStream(ctx, &NotifierService_ServiceDesc.Streams[0], "/notifierDefine.NotifierService/Push", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &notifierServicePushClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type NotifierService_PushClient interface {
+	Recv() (*PushReply, error)
+	grpc.ClientStream
+}
+
+type notifierServicePushClient struct {
+	grpc.ClientStream
+}
+
+func (x *notifierServicePushClient) Recv() (*PushReply, error) {
+	m := new(PushReply)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // NotifierServiceServer is the server API for NotifierService service.
 // All implementations must embed UnimplementedNotifierServiceServer
 // for forward compatibility
 type NotifierServiceServer interface {
+	RegisterPost(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Notifier(context.Context, *NotifierRequest) (*NotifierResponse, error)
+	Push(*PushRequest, NotifierService_PushServer) error
 	mustEmbedUnimplementedNotifierServiceServer()
 }
 
@@ -50,8 +95,14 @@ type NotifierServiceServer interface {
 type UnimplementedNotifierServiceServer struct {
 }
 
+func (UnimplementedNotifierServiceServer) RegisterPost(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterPost not implemented")
+}
 func (UnimplementedNotifierServiceServer) Notifier(context.Context, *NotifierRequest) (*NotifierResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Notifier not implemented")
+}
+func (UnimplementedNotifierServiceServer) Push(*PushRequest, NotifierService_PushServer) error {
+	return status.Errorf(codes.Unimplemented, "method Push not implemented")
 }
 func (UnimplementedNotifierServiceServer) mustEmbedUnimplementedNotifierServiceServer() {}
 
@@ -64,6 +115,24 @@ type UnsafeNotifierServiceServer interface {
 
 func RegisterNotifierServiceServer(s grpc.ServiceRegistrar, srv NotifierServiceServer) {
 	s.RegisterService(&NotifierService_ServiceDesc, srv)
+}
+
+func _NotifierService_RegisterPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotifierServiceServer).RegisterPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/notifierDefine.NotifierService/RegisterPost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotifierServiceServer).RegisterPost(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _NotifierService_Notifier_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -84,6 +153,27 @@ func _NotifierService_Notifier_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotifierService_Push_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(PushRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(NotifierServiceServer).Push(m, &notifierServicePushServer{stream})
+}
+
+type NotifierService_PushServer interface {
+	Send(*PushReply) error
+	grpc.ServerStream
+}
+
+type notifierServicePushServer struct {
+	grpc.ServerStream
+}
+
+func (x *notifierServicePushServer) Send(m *PushReply) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // NotifierService_ServiceDesc is the grpc.ServiceDesc for NotifierService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -92,10 +182,20 @@ var NotifierService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*NotifierServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "RegisterPost",
+			Handler:    _NotifierService_RegisterPost_Handler,
+		},
+		{
 			MethodName: "Notifier",
 			Handler:    _NotifierService_Notifier_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Push",
+			Handler:       _NotifierService_Push_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "proto/notifierDefine/notifier.proto",
 }
