@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'root.dart';
 
 void main() {
   runApp(const Myapp());
@@ -24,7 +25,7 @@ class Myapp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: '便りが無いのはeメール'),
+      home: RootWidget(),
     );
   }
 }
