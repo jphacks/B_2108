@@ -10,3 +10,16 @@ services:
       - MYSQL_USER=notifier
       - MYSQL_PASSWORD=not1f1er0000
       - MYSQL_ROOT_PASSWORD=r00t-not1f1er
+
+  notifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: notifier
+    ports:
+      - "127.0.0.1:8080:8080"
+    tty: true
+    depends_on:
+      - db
+    working_dir: /go/src
+    command: sh launch.sh
