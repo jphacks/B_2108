@@ -9,9 +9,10 @@ import (
 	"fmt"
 	"google.golang.org/grpc/codes"
 	"log"
+	"os"
 )
 
-const url = "notifier:not1f1er0000@tcp(db:3306)/notifier?parseTime=true"
+var url = os.Getenv("MYSQL_URL")
 
 type NotifierService struct {
 	notifierDefine.UnimplementedNotifierServiceServer

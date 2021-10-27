@@ -15,9 +15,10 @@ import (
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+	"os"
 )
 
-const addr = ":8080"
+var addr = os.Getenv("HOST_URL")
 
 func main() {
 	listen, err := net.Listen("tcp", addr)
