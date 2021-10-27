@@ -17,7 +17,7 @@ import (
 	"net"
 )
 
-const addr = "127.0.0.1:8080"
+const addr = ":8080"
 
 func main() {
 	listen, err := net.Listen("tcp", addr)

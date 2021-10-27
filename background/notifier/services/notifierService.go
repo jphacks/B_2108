@@ -11,7 +11,7 @@ import (
 	"log"
 )
 
-const url = "notifier:not1f1er0000@tcp(localhost:53306)/notifier?parseTime=true"
+const url = "notifier:not1f1er0000@tcp(db:3306)/notifier?parseTime=true"
 
 type NotifierService struct {
 	notifierDefine.UnimplementedNotifierServiceServer
