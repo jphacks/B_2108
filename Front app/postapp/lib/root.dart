@@ -4,7 +4,7 @@ import 'routes/home.dart';
 import 'routes/setting.dart';
 
 class RootWidget extends StatefulWidget {
-  RootWidget({Key? key}) : super(key: key);
+  const RootWidget({Key? key}) : super(key: key);
 
   @override
   _RootWidgetState createState() => _RootWidgetState();
