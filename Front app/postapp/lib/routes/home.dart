@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:postapp/widgets/mail_list.dart';
+import 'package:postapp/widgets/inbox.dart';
 import 'package:flutter/cupertino.dart';
 
 class Home extends StatelessWidget {
@@ -11,22 +11,22 @@ class Home extends StatelessWidget {
         title: Text('すべての受信トレイ'),
       ),
       body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
-        MailList(
+        Inbox(
           Icons.person,
           "おじいちゃん",
           "time: 何か届きました",
         ),
-        MailList(
+        Inbox(
           Icons.person,
           "久米酒",
           "おいしいよー",
         ),
-        MailList(
+        Inbox(
           Icons.person,
           "久米酒",
           "おいしいよー",
         ),
-        MailList(
+        Inbox(
           Icons.person,
           "久米酒",
           "おいしいよー",

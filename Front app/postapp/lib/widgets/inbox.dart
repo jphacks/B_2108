@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:postapp/widgets/message.dart';
 
-class MailList extends StatelessWidget {
-  MailList(this.icon, this.title, this.message);
+class Inbox extends StatelessWidget {
+  Inbox(this.icon, this.title, this.message);
   final IconData icon;
   final String title;
   final String message;
@@ -17,12 +18,18 @@ class MailList extends StatelessWidget {
         color: Colors.white,
         child: ListTile(
           leading: CircleAvatar(
-            child: Icon(icon), 
+            child: Icon(icon),
             backgroundColor: Colors.pink,
           ),
-          title: Text(title), 
-          subtitle: Text(message), 
-          onTap: () => {},
+          title: Text(title),
+          subtitle: Text(message),
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Message(icon: icon, title: title, message: message)))
+          },
         ),
       ),
       actions: <Widget>[
@@ -30,11 +37,6 @@ class MailList extends StatelessWidget {
           color: Colors.blue,
           icon: Icons.flash_off,
           onTap: () => {}, // _showSnackBar('Archive'),
-        ),
-        IconSlideAction(
-          color: Colors.indigo,
-          icon: Icons.volume_off,
-          onTap: () => {}, // _showSnackBar('Share'),
         ),
       ],
       secondaryActions: <Widget>[
