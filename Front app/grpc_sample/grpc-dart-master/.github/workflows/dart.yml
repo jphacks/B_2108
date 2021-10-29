@@ -1,0 +1,94 @@
+name: Dart
+
+on:
+  # Run CI on pushes to the master branch, and on PRs against master.
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  # Check code formatting and static analysis on a single OS (linux)
+  # against Dart dev.
+  analyze:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: [dev, 2.12.0]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1.2
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Report version
+        run: dart --version
+      - name: Install dependencies
+        run: dart pub get
+      - name: Check formatting (using dev dartfmt release)
+        if: ${{ matrix.sdk == 'dev' }}
+        run: dart format --output=none --set-exit-if-changed .
+      - name: Analyze code (introp and examples)
+        run: |
+          for example in interop example/*/; do
+            pushd $example
+            echo [Getting dependencies in $example]
+            dart pub get
+            popd
+          done
+        shell: bash
+      - name: Analyze code
+        run: dart analyze --fatal-infos .
+      - name: Check that grpc-web sample builds with DDC
+        if: ${{ matrix.sdk == 'dev' }}
+        # build_runner build --no-release to force compilation with DDC.
+        run: |
+          pushd example/grpc-web
+          rm -rf build
+          dart pub run build_runner build --no-release -o web:build
+          test -f ./build/main.dart.js
+          popd
+
+  # Run tests on a matrix consisting of three dimensions:
+  # 1. OS: mac, windows, linux
+  # 2. release channel: dev
+  # 3. TODO: Dart execution mode: native, web
+  test:
+    needs: analyze
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        sdk: [dev, 2.12.0]
+        platform: [vm, chrome]
+        exclude:
+          # We only run Chrome tests on Linux. No need to run them
+          # on Windows and Mac because they are platform independent.
+          - os: windows-latest
+            platform: chrome
+          - os: macos-latest
+            platform: chrome
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1.2
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Report version
+        run: dart --version
+      - name: Install envoy
+        if: ${{ matrix.platform == 'chrome' }}
+        run: |
+          ENVOY_VERSION="1.19.0"
+          wget https://archive.tetratelabs.io/envoy/download/v${ENVOY_VERSION}/envoy-v${ENVOY_VERSION}-linux-amd64.tar.xz
+          tar -xf envoy-v${ENVOY_VERSION}-linux-amd64.tar.xz
+          chmod +x envoy-v${ENVOY_VERSION}-linux-amd64/bin/envoy
+          sudo mv envoy-v${ENVOY_VERSION}-linux-amd64/bin/envoy /usr/bin/envoy
+          rm -rf envoy-v${ENVOY_VERSION}-linux-amd64.tar.xz envoy-v${ENVOY_VERSION}-linux-amd64
+        env:
+          MATRIX_OS: ${{ matrix.os }}
+        shell: bash
+      - name: Install dependencies
+        run: dart pub get
+      - name: Run tests
+        run: dart test --platform ${{ matrix.platform }}
