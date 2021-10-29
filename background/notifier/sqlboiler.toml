@@ -1,0 +1,12 @@
+[mysql]
+  dbname     = "notifier"
+  host       = "127.0.0.1"
+  port       = 53306
+  user       = "notifier"
+  pass       = "not1f1er0000"
+  sslmode = "false"
+  whitelist = [
+    "post",
+    "user",
+    "history"
+  ]
