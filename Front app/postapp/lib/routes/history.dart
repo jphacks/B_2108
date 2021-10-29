@@ -11,7 +11,7 @@ class History extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text(" History"),
+          title: const Text("History"),
         ),
         body: Center(
             child: ElevatedButton(
@@ -42,7 +42,7 @@ Future<void> signup() async {
       ..roomNumber = 101
       ..apartmentName = 'RCC'
       ..machineID = 1);
-    debugPrint('Register Response is: ${response.roomNumber}');
+    debugPrint('Register Response is: ${response.token}');
   } catch (e) {
     debugPrint('Caught error: $e');
   }
