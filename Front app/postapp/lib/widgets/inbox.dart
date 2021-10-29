@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:postapp/widgets/message.dart';
 
 class Inbox extends StatelessWidget {
-  Inbox(this.icon, this.title, this.message);
-  final IconData icon;
-  final String title;
-  final String message;
+  Inbox(this.created_at);
+  final String created_at;
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +14,8 @@ class Inbox extends StatelessWidget {
       child: Container(
         color: Colors.white,
         child: ListTile(
-          leading: CircleAvatar(
-            child: Icon(icon),
-            backgroundColor: Colors.pink,
-          ),
-          title: Text(title),
-          subtitle: Text(message),
-          onTap: () => {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        Message(icon: icon, title: title, message: message)))
-          },
+          title: Text("通知が来ました"),
+          subtitle: Text(created_at),
         ),
       ),
       actions: <Widget>[
@@ -60,3 +46,4 @@ class Inbox extends StatelessWidget {
     );
   }
 }
+

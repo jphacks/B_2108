@@ -11,26 +11,10 @@ class Home extends StatelessWidget {
         title: Text('すべての受信トレイ'),
       ),
       body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
-        Inbox(
-          Icons.person,
-          "おじいちゃん",
-          "time: 何か届きました",
-        ),
-        Inbox(
-          Icons.person,
-          "久米酒",
-          "おいしいよー",
-        ),
-        Inbox(
-          Icons.person,
-          "久米酒",
-          "おいしいよー",
-        ),
-        Inbox(
-          Icons.person,
-          "久米酒",
-          "おいしいよー",
-        ),
+        Inbox("2021-09-10 10:10"),
+        Inbox("2021-09-10 10:10"),
+        Inbox("2021-09-10 10:10"),
+        Inbox("2021-09-10 10:10"),
       ]),
     );
   }
