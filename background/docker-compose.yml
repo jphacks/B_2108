@@ -3,7 +3,6 @@ version: "3.8"
 services:
   db:
     image: mysql:latest
-    platform: linux/amd64
     ports:
       - "127.0.0.1:53306:3306"
     environment:
