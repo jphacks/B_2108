@@ -48,7 +48,8 @@ func main() {
 	opts = append(opts, grpc_middleware.WithUnaryServerChain(
 		grpc_ctxtags.UnaryServerInterceptor(),
 		grpc_zap.UnaryServerInterceptor(production, zapOpt),
-		grpc_auth.UnaryServerInterceptor(middlewares.Authenticate)))
+		grpc_auth.UnaryServerInterceptor(middlewares.Authenticate)),
+	)
 
 	server := grpc.NewServer(opts...)
 
