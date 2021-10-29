@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+option go_package = "backend/notifierDefine";
+
+package notifierDefine;
+
+service NotifierService {
+  rpc RegisterPost (RegisterRequest) returns (RegisterResponse) {}
+  rpc Login (LoginRequest) returns (LoginResponse) {}
+  rpc Notifier (NotifierRequest) returns (NotifierResponse) {}
+  rpc Push (PushRequest) returns (stream PushReply) {}
+  rpc GetHistory (HistoryRequest) returns (HistoryResponse) {}
+}
+
+message RegisterRequest {
+  string userName = 1;
+  string email = 2;
+  string password = 3;
+  int32 roomNumber = 4;
+  string apartmentName = 5;
+  int32 machineID = 6;
+}
+
+message RegisterResponse {
+  string token = 1;
+  int32 uid = 2;
+  string apartmentName = 3;
+  int32 roomNumber = 4;
+}
+
+message NotifierRequest {
+  int32 machineID = 1;
+}
+
+message NotifierResponse {
+  string message = 1;
+}
+
+message PushRequest {
+  int32 uid = 1;
+}
+
+message PushReply {
+  bool flag = 1;
+}
+
+message HistoryRequest {
+  int32 uid = 1;
+}
+
+message HistoryResponse {
+  repeated string history = 1;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  int32 uid = 1;
+  string apartmentName = 2;
+  int32 roomNumber = 3;
+}
