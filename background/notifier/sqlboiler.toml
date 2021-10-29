@@ -6,5 +6,7 @@
   pass       = "not1f1er0000"
   sslmode = "false"
   whitelist = [
-    "post"
+    "post",
+    "user",
+    "history"
   ]
