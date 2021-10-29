@@ -21,6 +21,7 @@ type NotifierServiceClient interface {
 	RegisterPost(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Notifier(ctx context.Context, in *NotifierRequest, opts ...grpc.CallOption) (*NotifierResponse, error)
 	Push(ctx context.Context, in *PushRequest, opts ...grpc.CallOption) (NotifierService_PushClient, error)
+	GetHistory(ctx context.Context, in *HistoryRequest, opts ...grpc.CallOption) (*HistoryResponse, error)
 }
 
 type notifierServiceClient struct {
@@ -81,6 +82,15 @@ func (x *notifierServicePushClient) Recv() (*PushReply, error) {
 	return m, nil
 }
 
+func (c *notifierServiceClient) GetHistory(ctx context.Context, in *HistoryRequest, opts ...grpc.CallOption) (*HistoryResponse, error) {
+	out := new(HistoryResponse)
+	err := c.cc.Invoke(ctx, "/notifierDefine.NotifierService/GetHistory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NotifierServiceServer is the server API for NotifierService service.
 // All implementations must embed UnimplementedNotifierServiceServer
 // for forward compatibility
@@ -88,6 +98,7 @@ type NotifierServiceServer interface {
 	RegisterPost(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Notifier(context.Context, *NotifierRequest) (*NotifierResponse, error)
 	Push(*PushRequest, NotifierService_PushServer) error
+	GetHistory(context.Context, *HistoryRequest) (*HistoryResponse, error)
 	mustEmbedUnimplementedNotifierServiceServer()
 }
 
@@ -103,6 +114,9 @@ func (UnimplementedNotifierServiceServer) Notifier(context.Context, *NotifierReq
 }
 func (UnimplementedNotifierServiceServer) Push(*PushRequest, NotifierService_PushServer) error {
 	return status.Errorf(codes.Unimplemented, "method Push not implemented")
+}
+func (UnimplementedNotifierServiceServer) GetHistory(context.Context, *HistoryRequest) (*HistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHistory not implemented")
 }
 func (UnimplementedNotifierServiceServer) mustEmbedUnimplementedNotifierServiceServer() {}
 
@@ -174,6 +188,24 @@ func (x *notifierServicePushServer) Send(m *PushReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _NotifierService_GetHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HistoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotifierServiceServer).GetHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/notifierDefine.NotifierService/GetHistory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotifierServiceServer).GetHistory(ctx, req.(*HistoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NotifierService_ServiceDesc is the grpc.ServiceDesc for NotifierService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -188,6 +220,10 @@ var NotifierService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Notifier",
 			Handler:    _NotifierService_Notifier_Handler,
+		},
+		{
+			MethodName: "GetHistory",
+			Handler:    _NotifierService_GetHistory_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

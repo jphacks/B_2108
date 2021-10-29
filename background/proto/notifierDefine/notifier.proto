@@ -8,20 +8,27 @@ service NotifierService {
   rpc RegisterPost (RegisterRequest) returns (RegisterResponse) {}
   rpc Notifier (NotifierRequest) returns (NotifierResponse) {}
   rpc Push (PushRequest) returns (stream PushReply) {}
+  rpc GetHistory (HistoryRequest) returns (HistoryResponse) {}
 }
 
 message RegisterRequest {
-  uint32 room = 1;
-  string apartmentName = 2;
+  string userName = 1;
+  string email = 2;
+  string password = 3;
+  int32 roomNumber = 4;
+  string apartmentName = 5;
+  int32 machineID = 6;
 }
 
 message RegisterResponse {
-  string message = 1;
+  string token = 1;
+  int32 uid = 2;
+  string apartmentName = 3;
+  int32 roomNumber = 4;
 }
 
 message NotifierRequest {
-  uint32 room = 1;
-  string apartmentName = 2;
+  int32 machineID = 1;
 }
 
 message NotifierResponse {
@@ -29,10 +36,17 @@ message NotifierResponse {
 }
 
 message PushRequest {
-  uint32 room = 1;
-  string apartmentName = 2;
+  int32 uid = 1;
 }
 
 message PushReply {
   bool flag = 1;
+}
+
+message HistoryRequest {
+  int32 uid = 1;
+}
+
+message HistoryResponse {
+  repeated string history = 1;
 }
