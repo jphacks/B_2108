@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotifierServiceClient interface {
 	RegisterPost(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Notifier(ctx context.Context, in *NotifierRequest, opts ...grpc.CallOption) (*NotifierResponse, error)
 	Push(ctx context.Context, in *PushRequest, opts ...grpc.CallOption) (NotifierService_PushClient, error)
 	GetHistory(ctx context.Context, in *HistoryRequest, opts ...grpc.CallOption) (*HistoryResponse, error)
@@ -35,6 +36,15 @@ func NewNotifierServiceClient(cc grpc.ClientConnInterface) NotifierServiceClient
 func (c *notifierServiceClient) RegisterPost(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	out := new(RegisterResponse)
 	err := c.cc.Invoke(ctx, "/notifierDefine.NotifierService/RegisterPost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *notifierServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, "/notifierDefine.NotifierService/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,6 +106,7 @@ func (c *notifierServiceClient) GetHistory(ctx context.Context, in *HistoryReque
 // for forward compatibility
 type NotifierServiceServer interface {
 	RegisterPost(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Notifier(context.Context, *NotifierRequest) (*NotifierResponse, error)
 	Push(*PushRequest, NotifierService_PushServer) error
 	GetHistory(context.Context, *HistoryRequest) (*HistoryResponse, error)
@@ -108,6 +119,9 @@ type UnimplementedNotifierServiceServer struct {
 
 func (UnimplementedNotifierServiceServer) RegisterPost(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterPost not implemented")
+}
+func (UnimplementedNotifierServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedNotifierServiceServer) Notifier(context.Context, *NotifierRequest) (*NotifierResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Notifier not implemented")
@@ -145,6 +159,24 @@ func _NotifierService_RegisterPost_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(NotifierServiceServer).RegisterPost(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NotifierService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotifierServiceServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/notifierDefine.NotifierService/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotifierServiceServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -216,6 +248,10 @@ var NotifierService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterPost",
 			Handler:    _NotifierService_RegisterPost_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _NotifierService_Login_Handler,
 		},
 		{
 			MethodName: "Notifier",
