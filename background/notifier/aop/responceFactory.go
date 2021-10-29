@@ -2,14 +2,32 @@ package aop
 
 import "background/proto/notifierDefine"
 
-func RegisterResponseFactory(message string) *notifierDefine.RegisterResponse {
+func RegisterResponseFactory(uid int, apartment string, room int, token string) *notifierDefine.RegisterResponse {
 	return &notifierDefine.RegisterResponse{
-		Message: message,
+		Uid:           int32(uid),
+		ApartmentName: apartment,
+		RoomNumber:    int32(room),
+		Token:         token,
 	}
 }
 
 func NotifierResponseFactory(message string) *notifierDefine.NotifierResponse {
 	return &notifierDefine.NotifierResponse{
 		Message: message,
+	}
+}
+
+func LoginResponseFactory(uid int, apartment string, room int, token string) *notifierDefine.LoginResponse {
+	return &notifierDefine.LoginResponse{
+		Uid:           int32(uid),
+		ApartmentName: apartment,
+		RoomNumber:    int32(room),
+		Token:         token,
+	}
+}
+
+func HistoryResponseFactory(data []string) *notifierDefine.HistoryResponse {
+	return &notifierDefine.HistoryResponse{
+		History: data,
 	}
 }
