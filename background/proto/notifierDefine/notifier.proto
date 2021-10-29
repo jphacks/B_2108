@@ -61,4 +61,5 @@ message LoginResponse {
   int32 uid = 1;
   string apartmentName = 2;
   int32 roomNumber = 3;
+  string token = 4;
 }
