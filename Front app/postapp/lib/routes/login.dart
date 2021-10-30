@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:postapp/routes/registerpage.dart';
+import 'package:grpc/grpc.dart';
+import 'package:postapp/protos/notifier.pb.dart';
+import 'package:postapp/protos/notifier.pbgrpc.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -16,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      appBar: AppBar(title: const Text('Login Form')),
+      appBar: AppBar(title: const Text('楽々ポストにようこそ')),
       body: Center(
         child: Form(
             key: _formKey,
@@ -25,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
+                  child: TextFormField(
                     controller: unameController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
@@ -34,11 +42,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         icon: Icon(Icons.email_outlined),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.zero)),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Username can't be empty";
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
+                  child: TextFormField(
                     controller: pwdController,
                     keyboardType: TextInputType.text,
                     obscureText: true,
@@ -48,6 +62,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         icon: Icon(Icons.lock),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.zero)),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "passwords can't be empty";
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 Padding(
@@ -55,11 +75,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        var uname = unameController.text;
-                        var pwd = pwdController.text;
-                        setState(() {
-                          _message = "User name : $uname\nPassword : ";
-                        });
+                        if (_formKey.currentState!.validate()) {
+                          var useremail = unameController.text;
+                          var pwd = pwdController.text;
+                          // setState(() {
+                          //   _message = "User name : $uname\nPassword : ";
+                          // });
+                          signup();
+                        }
                       },
                       child: const Text('Login'),
                     ),
@@ -69,9 +92,45 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(_message),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: const Text('Sign up'),
+                )
               ],
             )),
       ),
     ));
   }
+}
+
+Future<void> signup() async {
+  final channel = ClientChannel(
+    '127.0.0.1',
+    port: 8080,
+    options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
+  );
+
+  final stub = NotifierServiceClient(channel);
+
+  // const uid = 1;
+
+  try {
+    var response = await stub.registerPost(RegisterRequest()
+      ..userName = 'a'
+      ..email = 'asdas'
+      ..password = '0000'
+      ..roomNumber = 101
+      ..apartmentName = 'RCC'
+      ..machineID = 1);
+    debugPrint('Register Response is: ${response.token}');
+  } catch (e) {
+    debugPrint('Caught error: $e');
+  }
+  await channel.shutdown();
 }
