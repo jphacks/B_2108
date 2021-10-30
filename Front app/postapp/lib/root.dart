@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'routes/home.dart';
 import 'routes/setting.dart';
-import 'routes/history.dart';
+// import 'routes/history.dart';
 
 class RootWidget extends StatefulWidget {
   const RootWidget({Key? key}) : super(key: key);
@@ -18,20 +18,17 @@ class _RootWidgetState extends State<RootWidget> {
   // アイコン情報
   static const _footerIcons = [
     Icons.home,
-    Icons.history,
     Icons.settings,
   ];
 
   // アイコン文字列
   static const _footerItemNames = [
     'ホーム',
-    'History',
     '設定',
   ];
 
   final _routes = [
     const Home(),
-    const History(),
     const Setting(),
   ];
 
