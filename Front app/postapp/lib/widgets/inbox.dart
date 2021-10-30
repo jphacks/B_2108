@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 class Inbox extends StatelessWidget {
   Inbox(this.created_at);
