@@ -37,7 +37,7 @@ Future<void> signup() async {
   try {
     var response = await stub.registerPost(RegisterRequest()
       ..userName = 'a'
-      ..email = 'rcc@example.com'
+      ..email = 'rcc7@example.com'
       ..password = '0000'
       ..roomNumber = 101
       ..apartmentName = 'RCC'
