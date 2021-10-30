@@ -20,6 +20,28 @@ class _HomeState extends State<Home> {
       ),
       body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
         Inbox("2021-09-10 10:10"),
+
+        // const Divider(
+        //   height: 15,
+        //   thickness: 2.5,
+        //   indent: 20,
+        //   endIndent: 20,
+        // ),
+        // Inbox("2021-09-10 10:10"),
+        // const Divider(
+        //   height: 15,
+        //   thickness: 2.5,
+        //   indent: 20,
+        //   endIndent: 20,
+        // ),
+        // Inbox("2021-09-10 10:10"),
+        // const Divider(
+        //   height: 15,
+        //   thickness: 2.5,
+        //   indent: 20,
+        //   endIndent: 20,
+        // ),
+        // Inbox("2021-09-10 10:10"),
       ]),
     ));
   }

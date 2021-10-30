@@ -2,7 +2,7 @@ name: Go
 
 on:
   push:
-    branches: [ feat/notifier ]
+    branches: [ feat/notifier, develop. master ]
   pull_request:
     branches: [ master, develop ]
 

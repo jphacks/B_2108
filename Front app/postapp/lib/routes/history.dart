@@ -5,11 +5,13 @@ import 'package:postapp/protos/notifier.pbgrpc.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
+
 class History extends StatelessWidget {
   const History({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         appBar: AppBar(
           title: const Text("History"),
         ),
@@ -20,6 +22,7 @@ class History extends StatelessWidget {
           },
           child: const Text('reload'),
         )));
+
   }
 }
 

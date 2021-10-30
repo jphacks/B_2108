@@ -51,6 +51,7 @@ packages:
     source: hosted
     version: "1.15.0"
   crypto:
+
     dependency: "direct main"
     description:
       name: crypto
@@ -78,6 +79,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+
   flutter:
     dependency: "direct main"
     description: flutter
@@ -123,6 +125,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.13.4"
+
   http2:
     dependency: transitive
     description:
@@ -130,6 +133,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+
   http_parser:
     dependency: transitive
     description:
@@ -172,6 +176,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+
   sky_engine:
     dependency: transitive
     description: flutter
@@ -219,6 +224,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.2"
+  timeline_tile:
+    dependency: "direct main"
+    description:
+      name: timeline_tile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   typed_data:
     dependency: transitive
     description:
@@ -233,5 +245,19 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  win32:
+    dependency: transitive
+    description:
+      name: win32
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.10"
+  xdg_directories:
+    dependency: transitive
+    description:
+      name: xdg_directories
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
 sdks:
   dart: ">=2.14.0 <3.0.0"
