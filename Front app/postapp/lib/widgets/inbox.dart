@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 class Inbox extends StatelessWidget {
   Inbox(this.created_at);
@@ -8,42 +9,23 @@ class Inbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      actionPane: const SlidableDrawerActionPane(),
-      actionExtentRatio: 0.20,
-      child: Container(
-        color: Colors.white,
-        child: ListTile(
-          title: Text("通知が来ました"),
-          subtitle: Text(created_at),
+    return Stepper(
+      steps: <Step>[
+        Step(
+          title: const Text('Step 1 title'),
+          content: Container(
+              alignment: Alignment.centerLeft,
+              child: const Text('Content for Step 1')),
         ),
-      ),
-      actions: <Widget>[
-        IconSlideAction(
-          color: Colors.blue,
-          icon: Icons.flash_off,
-          onTap: () => {}, // _showSnackBar('Archive'),
+        Step(
+          title: Text('Step 2 title'),
+          content: Text('Content for Step 2'),
         ),
-      ],
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          color: Colors.black45,
-          iconWidget: const Text(
-            "非表示",
-            style: TextStyle(color: Colors.white),
-          ),
-          onTap: () => {}, // _showSnackBar('More'),
-        ),
-        IconSlideAction(
-          color: Colors.red,
-          iconWidget: Text(
-            "削除",
-            style: const TextStyle(color: Colors.white),
-          ),
-          onTap: () => {}, // _showSnackBar('Delete'),
+        Step(
+          title: Text('Step 3 title'),
+          content: Text('Content for Step 3'),
         ),
       ],
     );
   }
 }
-
