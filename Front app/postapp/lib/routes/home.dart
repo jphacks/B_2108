@@ -12,13 +12,15 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+        home: Scaffold(
       appBar: AppBar(
-        title: Text('すべての受信トレイ'),
+        title: Text('Flutter入門アカデミー'),
+        backgroundColor: Colors.orange,
       ),
       body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
         Inbox("2021-09-10 10:10"),
       ]),
-    );
+    ));
   }
 }

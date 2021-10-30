@@ -16,14 +16,14 @@ class History extends StatelessWidget {
         body: Center(
             child: ElevatedButton(
           onPressed: () {
-            signup();
+            reload_record();
           },
-          child: const Text('Register'),
+          child: const Text('reload'),
         )));
   }
 }
 
-Future<void> signup() async {
+Future<void> reload_record() async {
   final channel = ClientChannel(
     '127.0.0.1',
     port: 8080,
@@ -35,14 +35,8 @@ Future<void> signup() async {
   // const uid = 1;
 
   try {
-    var response = await stub.registerPost(RegisterRequest()
-      ..userName = 'a'
-      ..email = 'rcc7@example.com'
-      ..password = '0000'
-      ..roomNumber = 101
-      ..apartmentName = 'RCC'
-      ..machineID = 1);
-    debugPrint('Register Response is: ${response.token}');
+    var response = await stub.getHistory(HistoryRequest()..uid = 1);
+    debugPrint('Register Response is: ${response.history}');
   } catch (e) {
     debugPrint('Caught error: $e');
   }
