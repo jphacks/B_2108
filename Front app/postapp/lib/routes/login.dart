@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // setState(() {
                           //   _message = "User name : $uname\nPassword : ";
                           // });
-                          signup();
+                          signup(useremail, pwd);
                         }
                       },
                       child: const Text('Login'),
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-Future<void> signup() async {
+Future<void> signup(String uemail, String upass) async {
   final channel = ClientChannel(
     '127.0.0.1',
     port: 8080,
@@ -123,8 +123,8 @@ Future<void> signup() async {
   try {
     var response = await stub.registerPost(RegisterRequest()
       ..userName = 'a'
-      ..email = 'asdas'
-      ..password = '0000'
+      ..email = uemail
+      ..password = upass
       ..roomNumber = 101
       ..apartmentName = 'RCC'
       ..machineID = 1);
